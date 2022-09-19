@@ -5,10 +5,8 @@
 @section('content')
   @include('nav')
   <div class="container">
-    <ul>
-      @foreach ($articles as $article)
-        <li>{{ $article->title }}</li>  
-        <li>{{ $article->body }}</li>  
-      @endforeach
-    </ul>
+    @foreach($articles as $article)
+      @include('articles.card')
+    @endforeach
+  </div>
 @endsection
