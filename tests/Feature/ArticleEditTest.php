@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use App\Models\Article;
+use App\Models\Tag;
 use App\Http\Requests\ArticleRequest;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Validator;
@@ -20,7 +21,7 @@ class ArticleEditTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $article = Article::factory()->create();
+        $article = Article::factory()->create(['user_id' => $user->id]);
 
         $response = $this->actingAs($user)->get(route('articles.edit', $article));
 
@@ -48,20 +49,33 @@ class ArticleEditTest extends TestCase
 
         $article = Article::factory()->create(['user_id' => $user->id]);
 
+        Tag::factory()->create();
+
         $update_data = [
             'title' => 'title update data',
             'body' => 'body update data',
+            'tags' => '["tag","data"]',
         ];
 
         $this->actingAs($user)->put(route('articles.update', $article), $update_data);
 
         $this->assertDatabaseHas(
-            'articles',
-            $update_data + [
-                'id' => $article->id,
-                'user_id' => $user->id
-            ]
-        );
+            'articles',[
+                'title' => 'title update data',
+                'body' => 'body update data',
+            ]);
+        
+        $this->assertDatabaseHas(
+            'tags', [
+                'name' => 'tag'
+            ])
+            ->assertDatabaseCount('tags', 3);
+
+        $this->assertDatabaseHas(
+            'article_tag', [
+                'article_id' => $article->id,
+            ])
+            ->assertDatabaseCount('article_tag', 2);
     }
 
     /**

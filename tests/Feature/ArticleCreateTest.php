@@ -41,17 +41,32 @@ class ArticleCreateTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $data = [
+        $register_data = [
             'title' => 'title data',
             'body' => 'body data',
+            'tags' => '["tag","data"]',
         ];
 
-        $this->actingAs($user)->post(route('articles.store'), $data);
+        $this->actingAs($user)->post(route('articles.store'), $register_data);
 
         $this->assertDatabaseHas(
-            'articles',
-            $data + ['user_id' => $user->id]
-        );
+            'articles',[
+                'title' => 'title data',
+                'body' => 'body data',
+            ]);
+
+        $this->assertDatabaseHas(
+            'tags', [
+                'name' => 'tag'
+            ])
+            ->assertDatabaseCount('tags', 2);
+
+        $this->assertDatabaseHas(
+            'article_tag', [
+                'article_id' => 1,
+                'tag_id' => 1,
+            ])
+            ->assertDatabaseCount('article_tag', 2);
     }
 
     /**
