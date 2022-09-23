@@ -5,7 +5,7 @@
 </div>
 <div class="form-group">
   <article-tags-input
-    :initial-tags='@json($tagNames ?? [])'
+    :initial-tags='{{ Illuminate\Support\Js::from($tagNames ?? []) }}'
   >
   </article-tags-input>
 </div>
