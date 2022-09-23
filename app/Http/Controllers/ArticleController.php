@@ -10,11 +10,6 @@ use App\Models\Tag;
 
 class ArticleController extends Controller
 {
-    public function __construct()
-    {
-        $this->authorizeResource(Article::class, 'article');
-    }
-
     public function index()
     {
         $articles = Article::all()->sortByDesc('created_at');
@@ -43,6 +38,8 @@ class ArticleController extends Controller
 
     public function edit(Article $article)
     {
+        $this->authorize('update', $article);
+
         $tagNames = $article->tags->pluck('name');
             
         return view('articles.edit', [
@@ -53,6 +50,8 @@ class ArticleController extends Controller
 
     public function update(ArticleRequest $request, Article $article)
     {
+        $this->authorize('update', $article);
+
         $article->fill($request->all())->save();
 
         $article->tags()->detach();
@@ -66,6 +65,8 @@ class ArticleController extends Controller
 
     public function destroy(Article $article)
     {
+        $this->authorize('delete', $article);
+
         $article->delete();
         return redirect()->route('articles.index');
     }
