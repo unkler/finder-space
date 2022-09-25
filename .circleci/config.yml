@@ -4,4 +4,7 @@ jobs:
     docker:
       - image: cimg/php:8.1.9-node
     steps:
-      - run: echo "Hello Wolrd"
+      - checkout
+      - run: composer install -n --prefer-dist
+      - run: npm ci
+      - run: npm run dev
