@@ -7,4 +7,4 @@ jobs:
       - checkout
       - run: composer install -n --prefer-dist
       - run: npm ci
-      - run: npm run dev
+      - run: npm run build
