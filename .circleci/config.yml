@@ -8,3 +8,6 @@ jobs:
       - run: composer install -n --prefer-dist
       - run: npm ci
       - run: npm run build
+      - run:
+          name: php test
+          command: vendor/bin/phpunit
