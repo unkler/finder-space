@@ -3,19 +3,6 @@ jobs:
   build:
     docker:
       - image: cimg/php:8.1.9-node
-      - image: cimg/mysql:8.0
-        environment:
-          MYSQL_DATABASE: finderspace
-          MYSQL_USER: default
-          MYSQL_PASSWORD: secret
-    environment:
-      APP_ENV: testing
-      DB_CONNECTION: mysql
-      DB_HOST: localhost
-      DB_PORT: 3306
-      DB_DATABASE: finderspace
-      DB_USERNAME: default
-      DB_PASSWORD: secret
     steps:
       - checkout
       - restore_cache:
@@ -38,12 +25,6 @@ jobs:
           paths:
             - node_modules
       - run: npm run build
-      - run:
-          name: get ready for mysql
-          command: |
-            sudo apt-get update
-            sudo docker-php-ext-install pdo_mysql
-            dockerize -wait tcp://localhost:3306 -timeout 2m
       - run:
           name: php test
           command: vendor/bin/phpunit
