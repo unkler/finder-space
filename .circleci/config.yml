@@ -35,7 +35,7 @@ jobs:
       AWS_DEFAULT_REGION: ap-northeast-1
     steps:
       - checkout
-      - run: sudo composer self-update 2.4.2
+      - run: sudo composer self-update --1
       - restore_cache:
           key: composer-no-dev-v1-{{ checksum "composer.lock" }}
       - run: composer install -n --no-dev --prefer-dist
