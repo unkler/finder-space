@@ -2,6 +2,6 @@
 
 set -eux
 
-cd ~/finder--space
+cd ~/finder-space
 php artisan migrate --force
 php artisan config:cache
