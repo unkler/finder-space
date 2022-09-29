@@ -70,6 +70,17 @@ jobs:
             --application-name finder-space \
             --deployment-group-name finder-space \
             --s3-location bucket=${AWS_S3_BUCKET_NAME},key=finder-space.zip,bundleType=zip
+  deploy_tmp:
+    docker:
+      - image: cimg/php:8.1.9-node
+    steps:
+      - checkout
+      - add_ssh_keys
+      - run:
+          name: deploy to prod
+          command: |
+            echo -e "Host git-codecommit.*.amazonaws.com\n   User ${AWS_SSH_KEY_ID}\n   StrictHostKeyChecking no" > ${HOME}/.ssh/config
+            git push ssh://git-codecommit.ap-northeast-1.amazonaws.com/v1/repos/finder-space
 
 orbs:
   aws-cli: circleci/aws-cli@1.0.0
@@ -80,6 +91,13 @@ workflows:
     jobs:
       - build
       - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - main
+      - deploy_tmp:
           requires:
             - build
           filters:
